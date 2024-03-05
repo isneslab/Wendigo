@@ -1,0 +1,21 @@
+{
+  "num-envs": 1,
+  "num-steps": 128,
+  "total-timesteps": 384,
+
+  "learning-rate": 2.5e-4,
+  "optimizer-eps": 1e-5,
+  "anneal-lr": true,
+
+  "gamma": 0.99,
+  "gae-lambda": 0.95,
+  "num-minibatches": 4,
+  "update-epochs": 4,
+  "norm-adv": true,
+  "clip-coef": 0.2,
+  "clip-vloss": true,
+  "ent-coef": 0.01,
+  "vf-coef": 0.5,
+  "max-grad-norm": 0.5,
+  "target-kl": null
+}

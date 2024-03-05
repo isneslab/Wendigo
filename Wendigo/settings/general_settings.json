@@ -1,0 +1,32 @@
+{
+  "exp-name": "GraphQL",
+  "seed": 1,
+  "torch-deterministic": true,
+  "cuda": true,
+  "track": false,
+  "wandb-project-name": "Wendigo",
+  "wandb-entity": null,
+  "capture-video": false,
+  "save-model": true,
+
+  "env-id": "Wendigo/GraphQL",
+  "schema-path": "schemas/dvga-schema-rover.gql",
+
+  "connection-settings": {
+    "appName": "dolevf/dvga",
+    "targetHost": "127.0.0.1",
+    "targetPort": 5013,
+    "targetPath": "/graphql",
+    "method": "POST",
+    "timeout": 100,
+    "headers": {
+      "Content-Type": "application/json",
+      "User-Agent": "GQFRL"
+    },
+    "useSSL": false,
+    "verifySSL": false,
+    "certPath": null,
+    "keyFile": null,
+    "caPath": null
+  }
+}

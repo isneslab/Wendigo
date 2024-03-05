@@ -1,0 +1,13 @@
+{
+  "max-depth": 5,
+  "max-height": 5,
+  "multiplier": 1,
+  "reward-settings": {
+    "base": 0,
+    "repeat": -1,
+    "new": 0,
+    "rejected": -1,
+    "crash": 10
+  },
+  "greedy": false
+}

@@ -1,0 +1,101 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+index fcf07c482..527714a78 100644
+--- a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
++++ b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+@@ -1840,7 +1840,7 @@ class EMConfig {
+      *  but there are issues of performance (time and memory) in analysis of large graphs, that
+      *  would need to be optimized
+      */
+-    val defaultTreeDepth = 4
++    val defaultTreeDepth = 10
+ 
+     @Cfg("Maximum tree depth in mutations/queries to be evaluated." +
+             " This is to avoid issues when dealing with huge graphs in GraphQL")
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/graphql/service/GraphQLFitness.kt b/core/src/main/kotlin/org/evomaster/core/problem/graphql/service/GraphQLFitness.kt
+index cecfb1e30..5ba7f8c7a 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/graphql/service/GraphQLFitness.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/graphql/service/GraphQLFitness.kt
+@@ -23,6 +23,10 @@ import javax.ws.rs.client.ClientBuilder
+ import javax.ws.rs.client.Entity
+ import javax.ws.rs.client.Invocation
+ import javax.ws.rs.core.NewCookie
++import java.nio.file.FileSystems
++import java.nio.file.Path
++import java.io.RandomAccessFile
++import java.nio.charset.StandardCharsets
+ 
+ 
+ open class GraphQLFitness : HttpWsFitness<GraphQLIndividual>() {
+@@ -30,6 +34,7 @@ open class GraphQLFitness : HttpWsFitness<GraphQLIndividual>() {
+     companion object {
+         private val log: Logger = LoggerFactory.getLogger(GraphQLFitness::class.java)
+         private val mapper: ObjectMapper = ObjectMapper()
++        private var counter = 0
+     }
+ 
+     override fun doCalculateCoverage(
+@@ -278,9 +283,10 @@ open class GraphQLFitness : HttpWsFitness<GraphQLIndividual>() {
+         /*
+             TODO quite a lot of code here is the same as in Rest... need to refactor out into WsHttp
+          */
+-
++        var invocation = createInvocation(action, cookies, tokens)
++        var startTime = System.nanoTime()
+         val response = try {
+-            createInvocation(action, cookies, tokens).invoke()
++                invocation.invoke()
+         } catch (e: ProcessingException) {
+ 
+             /*
+@@ -323,7 +329,9 @@ open class GraphQLFitness : HttpWsFitness<GraphQLIndividual>() {
+ 
+                     TcpUtils.handleEphemeralPortIssue()
+ 
+-                    createInvocation(action, cookies, tokens).invoke()
++                    invocation = createInvocation(action, cookies, tokens)
++                    startTime = System.nanoTime()
++                    invocation.invoke()
+                 }
+                 TcpUtils.isStreamClosed(e) || TcpUtils.isEndOfFile(e) -> {
+                     /*
+@@ -337,7 +345,11 @@ open class GraphQLFitness : HttpWsFitness<GraphQLIndividual>() {
+             }
+         }
+ 
++        val endTime = System.nanoTime()
++        val elapsed = endTime - startTime
+         gqlcr.setStatusCode(response.status)
++        
++
+ 
+         handlePossibleConnectionClose(response)
+ 
+@@ -351,6 +363,15 @@ open class GraphQLFitness : HttpWsFitness<GraphQLIndividual>() {
+                  */
+                 val body = response.readEntity(String::class.java)
+ 
++                //Open a file in /tmp/counter and write the response, then close it
++                val file = Path.of("/home/ubuntu/FirefoxDisk/EvoMaster", "exchange-$counter.txt").toFile()
++                val textToAppend = """
++                {"response": ${body},"request": ${GraphQLUtils.generateGQLBodyEntity(action, config.outputFormat) ?: Entity.json(" ")},"time": ${elapsed / 1000000000.0},"status code": ${response.status}}]}
++                """.trimIndent()
++                file.appendText(textToAppend)
++                counter++
++
++
+                 if (body.length < configuration.maxResponseByteSize) {
+                     gqlcr.setBody(body)
+                 } else {
+diff --git a/core/src/main/kotlin/org/evomaster/core/search/service/Minimizer.kt b/core/src/main/kotlin/org/evomaster/core/search/service/Minimizer.kt
+index 12c6b5899..fb602ec33 100644
+--- a/core/src/main/kotlin/org/evomaster/core/search/service/Minimizer.kt
++++ b/core/src/main/kotlin/org/evomaster/core/search/service/Minimizer.kt
+@@ -92,6 +92,8 @@ class Minimizer<T: Individual> {
+ 
+         LoggingUtil.getInfoLogger().info("Starting to apply minimization phase")
+ 
++        //Close the program, no need to minimize for our experiments
++        System.exit(0)
+         recomputeArchiveWithFullCoverageInfo()
+ 
+         val current = archive.getCopyOfUniqueCoveringIndividuals()
