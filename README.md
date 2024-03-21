@@ -14,8 +14,11 @@ If you plan to use this repository in your projects, please cite the following p
   year = {2024},
 }
 ```
+***
 
-**Disclaimer**: Please note that the code in this repository is only a research prototype and may generate damaging queries. Do not use against real systems without prior, written consent of the targets. This code is released under a "Modified (Non-Commercial) BSD License" (see the terms [here](./LICENSE)).
+### Disclaimer 
+
+Please note that the code in this repository is only a research prototype and may generate damaging queries. Do not use against any real systems without prior, written consent of the targets. This code is released under a "Modified (Non-Commercial) BSD License": see the terms [here](./LICENSE).
 
 ***
 
@@ -47,4 +50,3 @@ The Wendigo code consists of the following sections:
   - _TEST_: currently only 'DoS' is supported
   - _DESC_: 'Regular', 'Large', 'Greedy-Regular' or 'Greedy-Large'
 
-***
