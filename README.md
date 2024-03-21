@@ -1,7 +1,20 @@
 ***
 # Wendigo
 ## Deep Reinforcement Learning for Denial-of-Service Query Discovery in GraphQL
-### This repository is the official release of the code used for the DLSP 2024 Wendigo Paper.
+
+This repository is the official release of the code used for the Wendigo Paper published in Deep Learning Security and Privacy Workshop (DSLP) 2024, co-located with IEEE S&P.
+
+If you plan to use this repository in your projects, please cite the following paper:
+
+```bibtex
+@inproceedings{mcfadden2024wendigo,
+  title = {Wendigo: Deep Reinforcement Learning for Denial-of-Service Query Discovery in GraphQL},
+  author = {McFadden, Shae and Maugeri, Marcello and Hicks, Chris and Mavroudis, Vasilis and Pierazzi, Fabio},
+  booktitle = {Proc. of the {IEEE} Workshop on Deep Learning Security and Privacy ({DLSP})},
+  year = {2024},
+}
+```
+
 ***
 
 ### Use Instructions
