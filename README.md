@@ -15,6 +15,8 @@ If you plan to use this repository in your projects, please cite the following p
 }
 ```
 
+**Disclaimer**: Please note that the code in this repository is only a research prototype and may generate damaging queries. Do not use against real systems without prior, written consent of the targets. Read this repository's license for more information on terms of use. 
+
 ***
 
 ### Use Instructions
